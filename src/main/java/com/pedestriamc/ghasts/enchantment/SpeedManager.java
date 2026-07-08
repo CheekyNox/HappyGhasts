@@ -10,11 +10,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class EnchantmentManager {
+public class SpeedManager {
 
     private final Map<Integer, Double> speeds = new HashMap<>();
 
@@ -24,7 +25,7 @@ public class EnchantmentManager {
 
     private final Enchantment enchantment;
 
-    public EnchantmentManager(@NotNull Ghasts plugin) {
+    public SpeedManager(@NotNull Ghasts plugin) {
         FileConfiguration config = plugin.getConfig();
         idleSpeed = config.getDouble("idle-speed");
         defaultSpeed = config.getDouble("default-riding-speed");
@@ -33,6 +34,10 @@ public class EnchantmentManager {
     }
 
     private Enchantment loadEnchantment(@NotNull FileConfiguration config) {
+        if (!config.getBoolean("enchantment.enable")) {
+            return null;
+        }
+
         String keyString = config.getString("enchantment.name", "velocity");
         Key key = Key.key("pedestria:" + keyString);
         Registry<@NotNull Enchantment> registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT);
@@ -54,6 +59,7 @@ public class EnchantmentManager {
         }
     }
 
+    @Nullable
     public Enchantment getEnchantment() {
         return enchantment;
     }

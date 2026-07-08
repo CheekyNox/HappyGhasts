@@ -58,6 +58,11 @@ public class EnchantmentBootstrapper implements PluginBootstrap {
     public void bootstrap(@NotNull BootstrapContext context) {
         EnchantmentData data = getData(context.getDataDirectory());
 
+        if (!data.isEnabled) {
+            System.out.println("[Ghasts] Enchantment disabled in config.yml, skipping...");
+            return;
+        }
+
         TypedKey<Enchantment> key = EnchantmentKeys.create(Key.key(data.keyString()));
         context.getLifecycleManager().registerEventHandler(
                 RegistryEvents.ENCHANTMENT.compose().newHandler(event -> {
@@ -106,7 +111,8 @@ public class EnchantmentBootstrapper implements PluginBootstrap {
                     config.getInt("enchantment.weight"),
                     EnchantmentCost.of(config.getInt("enchantment.cost.minimum", 1), config.getInt("enchantment.cost.minimum-modifier", 11)),
                     EnchantmentCost.of(config.getInt("enchantment.cost.maximum", 15), config.getInt("enchantment.cost.maximum-modifier", 10)),
-                    config.getInt("enchantment.cost.anvil")
+                    config.getInt("enchantment.cost.anvil"),
+                    config.getBoolean("enchantment.enable", true)
             );
         } else {
             System.out.println("[Ghasts] config.yml not found, using default values.");
@@ -117,12 +123,13 @@ public class EnchantmentBootstrapper implements PluginBootstrap {
                     3,
                     EnchantmentCost.of(1, 11),
                     EnchantmentCost.of(15, 10),
-                    3
+                    3,
+                    true
             );
         }
     }
 
-    private record EnchantmentData(@NotNull String keyString, @NotNull String description, int maxLevel, int weight, EnchantmentCost minCost, EnchantmentCost maxCost, int anvilCost) {
+    private record EnchantmentData(@NotNull String keyString, @NotNull String description, int maxLevel, int weight, EnchantmentCost minCost, EnchantmentCost maxCost, int anvilCost, boolean isEnabled) {
 
         @Override
         public String keyString() {

@@ -26,11 +26,13 @@ public class GhastCommand implements CommandExecutor {
     private final Messenger messenger;
 
     private final Component helpMessage;
+    private final boolean enchantmentEnabled;
 
     public GhastCommand(@NotNull Ghasts plugin) {
         this.plugin = plugin;
         messenger = plugin.getMessenger();
         helpMessage = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.help"));
+        enchantmentEnabled = plugin.getConfig().getBoolean("enchantment.enabled");
     }
 
     @Override
@@ -92,7 +94,7 @@ public class GhastCommand implements CommandExecutor {
     private @NotNull ItemStack createBook(int level, int amount) {
         ItemStack stack = ItemStack.of(Material.ENCHANTED_BOOK).asQuantity(amount);
         ItemMeta meta = stack.getItemMeta();
-        meta.addEnchant(plugin.getManager().getEnchantment(), level, true);
+        meta.addEnchant(plugin.getSpeedManager().getEnchantment(), level, true);
         stack.setItemMeta(meta);
 
         return stack;

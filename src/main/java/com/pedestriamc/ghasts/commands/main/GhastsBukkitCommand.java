@@ -4,6 +4,7 @@ import com.pedestriamc.ghasts.Ghasts;
 import com.pedestriamc.ghasts.tabcompleters.GhastsTabCompleter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -16,7 +17,14 @@ public class GhastsBukkitCommand extends Command {
     public GhastsBukkitCommand(@NotNull Ghasts ghasts) {
         super("ghasts", "The main command for EnchantedHarnesses", "/ghasts <help | enchant>", List.of());
         command = new EnchantedHarnessesCommand(ghasts);
-        completer = new GhastsTabCompleter(ghasts.getManager().getEnchantment().getMaxLevel());
+
+        int maxLevel = 0;
+        Enchantment enchantment = ghasts.getSpeedManager().getEnchantment();
+        if (enchantment != null) {
+            maxLevel = enchantment.getMaxLevel();
+        }
+
+        completer = new GhastsTabCompleter(maxLevel);
     }
 
     @Override

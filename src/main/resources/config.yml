@@ -1,16 +1,21 @@
-# Fast Happy Ghast
-# author: wiicart
-# wiicart.net
+# Enchanted Harnesses
+# A Pedestria plugin
+# https://www.pedestria.com
 
 # Default riding speed
+# [Range: 0-1]
 # (Vanilla is 0.05)
-default-riding-speed: 0.05
+default-riding-speed: 0.075
 
 # The speed when no player is mounted
+# (So the ghasts don't just disappear off into the distance)
 idle-speed: 0.01
 
 # Options for the Happy Ghast speed enchantment
 enchantment:
+  # Should this enchantment be enabled?
+  enable: true
+
   # Name
   name: "velocity"
 
@@ -36,9 +41,9 @@ enchantment:
   # What each level enchantment should set the happy ghast's speed to:
   # Speed Range: 0-1
   levels:
-    1: 0.1 # This means enchantment level I gives Happy Ghasts a speed of 0.20
-    2: 0.15
-    3: 0.17
+    1: 0.09
+    2: 0.1
+    3: 0.12
 
 # Plugin messages
 # Uses MiniMessage
@@ -49,25 +54,34 @@ messages:
 
   # Message sent when console issues a command without defining a player
   console-insufficient: "<white>Console must define a player to use this command.</white>"
+
   # The message sent when a player uses /ghasts givebook
   book-given: "<white>Gave <gray>{quantity}</gray> books to <gray>{player}</gray></white>"
+
   # Plugin version message
   plugin-version: "<white>Running Ghasts version <green>{version}</green></white>"
+
   # Reload not supported message
   reload-unsupported: "<white>Reloading is not supported, please restart instead.</white>"
+
   # Help Message
   help: "<dark_gray>+-------[<white>Ghasts</white>]-------+</dark_gray><newLine>
 <white><gray>•</gray> /version - Provides the version<newLine>
 <gray>•</gray> /givebook <level> <quantity> <player> - Gives an enchanted book</white>"
+
   # No Permission
   no-perms: "<red>No permission!</red>"
+
   # Sent when a player attempts to enchant an invalid item
   invalid-item: "<red>Invalid item, you must be holding a book or harness.</red>"
+
   # Sent when a player attempts to enchant an item with an invalid enchantment level
   # Placeholder: {max} - the max enchantment level
-  invalid-level: "<red>Invalid enchantment level. Must be from 0 to {max}</red>"
+  invalid-level: "<red>Invalid enchantment level. Must be from 1 to {max}</red>"
+
   # Sent when a player attempts to run a command with too many args
   too-many-args: "<red>Too many args!</red>"
+
   # Sent when an item is enchanted with /ghasts enchant
   # Placeholders:
   # {item} - the item that has been enchanted
@@ -76,3 +90,6 @@ messages:
   # Tells the plugin version
   # Placeholder: {version} - The plugin version
   version: "<light-gray>Running EnchantedHarnesses version <green>{version}</green></light-gray>"
+
+  # Sent when the enchantment is disabled.
+  enchantment-disabled: "The Happy Ghast speed enchantment is currently disabled."

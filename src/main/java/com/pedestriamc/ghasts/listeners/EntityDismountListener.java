@@ -14,7 +14,7 @@ public class EntityDismountListener implements Listener {
     private final double idleSpeed;
 
     public EntityDismountListener(@NotNull Ghasts plugin) {
-        idleSpeed = plugin.getManager().getIdleSpeed();
+        idleSpeed = plugin.getSpeedManager().getIdleSpeed();
     }
 
     @EventHandler

@@ -1,7 +1,7 @@
 package com.pedestriamc.ghasts.listeners;
 
 import com.pedestriamc.ghasts.Ghasts;
-import com.pedestriamc.ghasts.enchantment.EnchantmentManager;
+import com.pedestriamc.ghasts.enchantment.SpeedManager;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.enchantments.Enchantment;
@@ -16,10 +16,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class EntityMountListener implements Listener {
 
-    private final EnchantmentManager manager;
+    private final SpeedManager manager;
 
     public EntityMountListener(@NotNull Ghasts plugin) {
-        manager = plugin.getManager();
+        manager = plugin.getSpeedManager();
     }
 
     @EventHandler
@@ -42,7 +42,7 @@ public class EntityMountListener implements Listener {
      */
     private int getEnchantmentLevelIfPresent(@NotNull ItemStack itemStack) {
         Enchantment enchantment = manager.getEnchantment();
-        if (itemStack.getEnchantments().containsKey(enchantment)) {
+        if (enchantment != null && itemStack.getEnchantments().containsKey(enchantment)) {
             return itemStack.getEnchantments().get(enchantment);
         }
 

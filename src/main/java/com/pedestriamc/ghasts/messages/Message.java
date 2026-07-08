@@ -12,7 +12,8 @@ public enum Message {
     INVALID_ITEM("messages.invalid-item", "<red>You must be holding an un-enchanted book or a harness.</red>"),
     INVALID_LEVEL("messages.invalid-level", "Invalid enchantment level. Must be from 0 to {max}"),
     TOO_MANY_ARGS("messages.too-many-args", "<red>Too many args!</red>"),
-    VERSION("messages.version", "<light-gray>Running EnchantedHarnesses version <green>{version}</green></light-gray>");
+    VERSION("messages.version", "<light-gray>Running EnchantedHarnesses version <green>{version}</green></light-gray>"),
+    ENCHANTMENT_DISABLED("messages.enchantment-disabled", "The Happy Ghast speed enchantment is currently disabled.");
 
     private final String key;
     private final String fallback;

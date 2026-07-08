@@ -28,11 +28,17 @@ class EnchantCommand implements CartCommandExecutor {
     private final int maxLevel;
 
     EnchantCommand(@NotNull Ghasts ghasts) {
-        enchantment = ghasts.getManager().getEnchantment();
-        maxLevel = enchantment.getMaxLevel();
+        enchantment = ghasts.getSpeedManager().getEnchantment();
+
+        int maxEnchantLevel = 0;
+        if (enchantment != null) {
+            maxEnchantLevel = enchantment.getMaxLevel();
+        }
+        maxLevel = maxEnchantLevel;
+
         messenger = ghasts.getMessenger();
 
-        finalMessage = readFinalMessageRaw(ghasts);
+        finalMessage = loadFinalMessageRaw(ghasts);
     }
 
     @Override
@@ -104,7 +110,7 @@ class EnchantCommand implements CartCommandExecutor {
 
         try {
             int level = Integer.parseInt(args[0]);
-            if (level > 1 && level <= maxLevel) {
+            if (level >= 1 && level <= maxLevel) {
                 return level;
             }
         } catch(NumberFormatException ignored) {}
@@ -128,7 +134,7 @@ class EnchantCommand implements CartCommandExecutor {
     }
 
     @NotNull
-    private Component readFinalMessageRaw(@NotNull Ghasts ghasts) {
+    private Component loadFinalMessageRaw(@NotNull Ghasts ghasts) {
         return messenger.prefix().append(MiniMessage.miniMessage().deserialize(
                 ghasts.getConfig().getString(
                         "messages.enchant-success",

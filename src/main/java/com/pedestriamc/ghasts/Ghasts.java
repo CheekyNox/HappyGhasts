@@ -1,13 +1,14 @@
 package com.pedestriamc.ghasts;
 
 import com.pedestriamc.ghasts.commands.main.GhastsBukkitCommand;
-import com.pedestriamc.ghasts.enchantment.EnchantmentManager;
+import com.pedestriamc.ghasts.enchantment.SpeedManager;
 import com.pedestriamc.ghasts.listeners.EntityDismountListener;
 import com.pedestriamc.ghasts.listeners.EntityMountListener;
 import com.pedestriamc.ghasts.listeners.PrepareItemEnchantListener;
 import com.pedestriamc.ghasts.messages.Messenger;
 import com.tchristofferson.configupdater.ConfigUpdater;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -18,12 +19,13 @@ import java.io.IOException;
 
 public final class Ghasts extends JavaPlugin {
 
-    public static final String VERSION = "1.1";
+    public static final String VERSION = "1.3";
 
     public static final int METRICS_ID = 26530;
 
-    private EnchantmentManager manager;
+    private SpeedManager manager;
     private Messenger messenger;
+    private boolean enchantmentEnabled;
 
     private Ghasts() {}
 
@@ -32,16 +34,22 @@ public final class Ghasts extends JavaPlugin {
         getLogger().info("Loading...");
         updateConfig();
         saveDefaultConfig();
-        manager = new EnchantmentManager(this);
+        enchantmentEnabled = getConfig().getBoolean("enchantment.enable");
+        manager = new SpeedManager(this);
         messenger = new Messenger(getConfig());
     }
 
     @Override
     public void onEnable() {
+        Metrics metrics = new Metrics(this, METRICS_ID);
+        metrics.addCustomChart(new SimplePie("using_enchantment", () -> String.valueOf(enchantmentEnabled)));
+        metrics.addCustomChart(new SimplePie("default_speed", () -> String.valueOf(manager.getDefaultSpeed())));
         registerListener(new EntityDismountListener(this));
         registerListener(new EntityMountListener(this));
-        registerListener(new PrepareItemEnchantListener(this));
-        new Metrics(this, METRICS_ID);
+        if (enchantmentEnabled) {
+            registerListener(new PrepareItemEnchantListener(this));
+        }
+
         registerGhastsCommand();
         getLogger().info("Enabled.");
     }
@@ -53,13 +61,17 @@ public final class Ghasts extends JavaPlugin {
     }
 
     @NotNull
-    public EnchantmentManager getManager() {
+    public SpeedManager getSpeedManager() {
         return manager;
     }
 
     @NotNull
     public Messenger getMessenger() {
         return messenger;
+    }
+
+    public boolean isEnchantmentEnabled() {
+        return enchantmentEnabled;
     }
 
     private void registerListener(@NotNull Listener listener) {
@@ -72,6 +84,7 @@ public final class Ghasts extends JavaPlugin {
             getServer().getCommandMap().register("ghasts", new GhastsBukkitCommand(this));
         } catch(Exception e) {
             getLogger().warning("Failed to register /ghasts command.");
+            getLogger().warning(e.getMessage());
         }
     }
 
