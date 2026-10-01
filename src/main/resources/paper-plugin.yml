@@ -1,9 +1,22 @@
 bootstrapper: com.pedestriamc.ghasts.enchantment.EnchantmentBootstrapper
 name: EnchantedHarnesses
-version: '1.3'
+version: '${project.version}'
 main: com.pedestriamc.ghasts.Ghasts
-api-version: '1.21'
+api-version: '26.3'
 prefix: Ghasts
 author: wiicart
 description: Happy Ghast enhancements
 website: pedestria.com
+permissions:
+  ghasts.enchant:
+    description: Enchant the held book or harness
+    default: op
+  ghasts.reload:
+    description: Show restart instructions
+    default: op
+  ghasts.*:
+    description: All EnchantedHarnesses administrative permissions
+    default: op
+    children:
+      ghasts.enchant: true
+      ghasts.reload: true

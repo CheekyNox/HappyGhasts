@@ -1,0 +1,57 @@
+name: Build and validate
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Compile, analyze, test, format-check and package
+        run: mvn -B -ntp clean verify -Dbuild.commit=${{ github.sha }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EnchantedHarnesses
+          path: target/EnchantedHarnesses-1.4.0.jar
+  vulnerabilities:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Check dependency vulnerabilities
+        run: mvn -B -ntp dependency-check:check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vulnerability-reports
+          path: target/dependency-check-report.*
+          if-no-files-found: ignore
+  osv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Inventory compile and provided dependencies
+        run: mvn -B -ntp dependency:list -DoutputFile=target/dependencies.txt -DincludeScope=compile
+      - name: Check exact package versions against OSV
+        shell: pwsh
+        run: ./scripts/check-osv.ps1 -DependencyList target/dependencies.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: osv-report
+          path: target/osv-report.json
+          if-no-files-found: ignore

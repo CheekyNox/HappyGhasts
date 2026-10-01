@@ -1,0 +1,16 @@
+# MiniMessage texts. Placeholders are replaced with components, not parsed as markup.
+prefix: "<dark_gray>[<white>Ghasts</white>]</dark_gray> "
+world-disabled: "<red>You cannot ride Happy Ghasts in this world.</red>"
+console-player-only: "<red>Use this command as a player holding a book or harness.</red>"
+no-perms: "<red>You do not have permission to use this command.</red>"
+invalid-item: "<red>Hold a book, enchanted book or harness, then try again.</red>"
+invalid-level: "<red>Choose an enchantment level from 1 to {max}.</red>"
+enchant-success: "<gray>Enchanted {item} with {enchantment}.</gray>"
+version: "<gray>Build <green>{build}</green></gray>"
+reload-unsupported: "<gray>Restart the server to apply configuration changes.</gray>"
+enchantment-disabled: "<red>The speed enchantment is disabled in config.yml.</red>"
+help: |-
+  <gray>/ghasts version - Show plugin version
+  /ghasts help - Show this help
+  /ghasts enchant [level] - Enchant the held book or harness
+  /ghasts reload - Show restart instructions</gray>
