@@ -1,6 +1,6 @@
 # MiniMessage texts. Placeholders are replaced with components, not parsed as markup.
 prefix: "<dark_gray>[<white>Ghasts</white>]</dark_gray> "
-world-disabled: "<red>You cannot ride Happy Ghasts in this world.</red>"
+world-disabled: "<red>You cannot ride Happy Ghasts with the speed enchantment in this world.</red>"
 console-player-only: "<red>Use this command as a player holding a book or harness.</red>"
 no-perms: "<red>You do not have permission to use this command.</red>"
 invalid-item: "<red>Hold a book, enchanted book or harness, then try again.</red>"

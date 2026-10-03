@@ -34,7 +34,8 @@ public class EntityMountListener implements Listener {
       return;
     }
 
-    if (plugin.isWorldDisabled(ghast.getWorld().getName())) {
+    int level = getEnchantmentLevelIfPresent(ghast.getEquipment().getItem(EquipmentSlot.BODY));
+    if (level > 0 && plugin.isWorldDisabled(ghast.getWorld().getName())) {
       event.setCancelled(true);
       if (event.getEntity() instanceof Player player) {
         plugin.getMessenger().sendMessage(player, Message.WORLD_DISABLED);
@@ -42,14 +43,17 @@ public class EntityMountListener implements Listener {
       return;
     }
 
-    int level = getEnchantmentLevelIfPresent(ghast.getEquipment().getItem(EquipmentSlot.BODY));
+    applySpeed(ghast, level);
+  }
+
+  void applySpeed(@NotNull HappyGhast ghast, int level) {
     AttributeInstance attribute = ghast.getAttribute(Attribute.FLYING_SPEED);
     if (attribute != null) {
       attribute.setBaseValue(manager.getSpeed(level));
     }
   }
 
-  private int getEnchantmentLevelIfPresent(@NotNull ItemStack itemStack) {
+  int getEnchantmentLevelIfPresent(@NotNull ItemStack itemStack) {
     Enchantment enchantment = manager.getEnchantment();
     if (enchantment != null && itemStack.getEnchantments().containsKey(enchantment)) {
       return itemStack.getEnchantments().get(enchantment);

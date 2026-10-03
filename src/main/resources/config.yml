@@ -2,7 +2,8 @@
 # Managed by the plugin. Do not change.
 config-version: 2
 
-# Exact, case-sensitive world names where mounting Happy Ghasts is forbidden.
+# Exact, case-sensitive world names where riding Happy Ghasts with the speed enchantment is forbidden.
+# Happy Ghasts without the speed enchantment can still be ridden in these worlds.
 # Example: [world_nether, world_the_end]. Empty allows riding everywhere.
 # Restart the server after changing any setting; reload is not supported.
 disabled-worlds: []

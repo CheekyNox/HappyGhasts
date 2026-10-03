@@ -14,7 +14,7 @@ Invalid YAML, registry keys, levels, speeds or costs stop startup with a configu
 
 ## World restrictions
 
-To forbid mounting Happy Ghasts in specific worlds, add their exact (case-sensitive) names to `disabled-worlds` in `config.yml`:
+To forbid riding Happy Ghasts with the speed enchantment in specific worlds, add their exact (case-sensitive) names to `disabled-worlds` in `config.yml`. Happy Ghasts without this enchantment can still be ridden:
 
 ```yaml
 disabled-worlds:

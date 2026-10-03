@@ -14,24 +14,55 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDismountEvent;
 import org.bukkit.event.entity.EntityMountEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.Test;
 
 class RidingListenersTest {
   @Test
-  void deniedWorldCancelsMountBeforeReadingEquipmentOrChangingSpeed() {
+  void deniedWorldCancelsEnchantedMountWithoutChangingSpeed() {
+    assertMountRestriction(true, true);
+  }
+
+  @Test
+  void deniedWorldAllowsOrdinaryGhast() {
+    assertMountRestriction(true, false);
+  }
+
+  @Test
+  void allowedWorldAllowsEnchantedGhast() {
+    assertMountRestriction(false, true);
+  }
+
+  private void assertMountRestriction(boolean disabledWorld, boolean enchanted) {
     Ghasts plugin = mock(Ghasts.class);
+    SpeedManager manager = mock(SpeedManager.class);
+    when(plugin.getSpeedManager()).thenReturn(manager);
     HappyGhast ghast = mock(HappyGhast.class);
+    EntityEquipment equipment = mock(EntityEquipment.class);
+    ItemStack harness = mock(ItemStack.class);
+    when(ghast.getEquipment()).thenReturn(equipment);
+    when(equipment.getItem(EquipmentSlot.BODY)).thenReturn(harness);
+
     Player player = mock(Player.class);
     World world = mock(World.class);
     when(ghast.getWorld()).thenReturn(world);
     when(world.getName()).thenReturn("lobby");
-    when(plugin.isWorldDisabled("lobby")).thenReturn(true);
+    when(plugin.isWorldDisabled("lobby")).thenReturn(disabledWorld);
     when(plugin.getMessenger()).thenReturn(mock(Messenger.class));
     var event = new EntityMountEvent(player, ghast);
-    new EntityMountListener(plugin).onEvent(event);
-    assertTrue(event.isCancelled());
-    verify(ghast, never()).getEquipment();
-    verify(ghast, never()).getAttribute(any());
+    EntityMountListener listener = spy(new EntityMountListener(plugin));
+    doReturn(enchanted ? 1 : -1).when(listener).getEnchantmentLevelIfPresent(harness);
+    doNothing().when(listener).applySpeed(any(), anyInt());
+    listener.onEvent(event);
+    assertEquals(disabledWorld && enchanted, event.isCancelled());
+    if (event.isCancelled()) {
+      verify(listener, never()).applySpeed(any(), anyInt());
+    } else {
+      verify(listener).applySpeed(ghast, enchanted ? 1 : -1);
+      verifyNoInteractions(plugin.getMessenger());
+    }
   }
 
   @Test
